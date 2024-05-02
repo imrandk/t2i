@@ -1,0 +1,78 @@
+// Function to generate a random 10-digit number and insert it into the input field
+function generateAndInsertRandomNumber() {
+  const min = Math.pow(10, 9); // Minimum 10-digit number
+  const max = Math.pow(10, 10) - 1; // Maximum 10-digit number
+
+  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const inputField = document.querySelector('input[aria-label="Seed"]');
+  inputField.value = randomNumber;
+}
+
+// Call the function to generate and insert a random number
+generateAndInsertRandomNumber();
+
+
+// Function to programmatically click the button
+function clickButton() {
+  const button = document.getElementById('component-9');
+  button.click();
+}
+
+// Call the function to click the button
+clickButton();
+
+
+// Function to extract ID from image URL
+function extractIdFromUrl(url) {
+  const parts = url.split('/');
+  const id = parts[parts.length - 2]; // Assuming the ID is the second-to-last part of the URL
+  return id;
+}
+
+// Function to download all images within the specified area
+function downloadImages() {
+  // Retrieve processed IDs from local storage or initialize an empty array
+  let processedIds = JSON.parse(localStorage.getItem('processedIds')) || [];
+  
+  // Select the grid container
+  const gridContainer = document.querySelector('.grid-container');
+  
+  // Select all img elements within the grid container
+  const images = gridContainer.querySelectorAll('img');
+  
+  // Iterate over each image and initiate the download
+  images.forEach(image => {
+    const imageUrl = image.src;
+    const id = extractIdFromUrl(imageUrl);
+    
+    // Check if the ID has already been processed
+    if (!processedIds.includes(id)) {
+      const filename = `${id}.jpg`;
+      
+      // Create a temporary anchor element to trigger the download
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = filename;
+      link.style.display = 'none';
+      
+      // Append the anchor element to the document body
+      document.body.appendChild(link);
+      
+      // Trigger the download
+      link.click();
+      
+      // Add the ID to the list of processed IDs
+      processedIds.push(id);
+      
+      // Clean up by removing the anchor element
+      document.body.removeChild(link);
+    }
+  });
+  
+  // Save the updated list of processed IDs to local storage
+  localStorage.setItem('processedIds', JSON.stringify(processedIds));
+}
+
+// Call the function to download images
+downloadImages();
